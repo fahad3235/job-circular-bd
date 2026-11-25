@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Job Circular BD &#8212; Track Bangladesh Job Circulars</title>
+<meta name="description" content="Offline job circular tracker for Bangladesh: deadlines, fees, exam dates and application status in one place. No account, no network.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <div>
+      <h1 id="app-title">Job Circular BD</h1>
+      <p class="tagline" data-i18n="appTagline">Track Bangladesh job circulars &#8212; deadlines, fees and exams in one place.</p>
+    </div>
+    <button id="lang-toggle" class="lang-btn" type="button">&#2476;&#2494;&#2434;&#2482;&#2494;</button>
+  </div>
+</header>
+
+<nav class="tabs wrap" aria-label="Sections">
+  <button class="tab-btn active" data-tab="dash" type="button" data-i18n="tabDash">Dashboard</button>
+  <button class="tab-btn" data-tab="list" type="button" data-i18n="tabList">Circulars</button>
+  <button class="tab-btn" data-tab="add" type="button" data-i18n="tabAdd">Add</button>
+  <button class="tab-btn" data-tab="data" type="button" data-i18n="tabData">Data</button>
+</nav>
+
+<main class="wrap">
+  <!-- Dashboard -->
+  <section id="tab-dash" class="tab-panel">
+    <h2 data-i18n="dashTitle">Dashboard</h2>
+    <p id="dash-empty" class="empty" data-i18n="dashEmpty">No circulars added yet. Add your first circular to start tracking.</p>
+    <div id="dash-stats" class="stat-grid" hidden></div>
+    <h3 id="closing-title" data-i18n="closingSoonTitle" hidden>Closing soon</h3>
+    <ul id="closing-list" class="closing-list"></ul>
+  </section>
+
+  <!-- Circulars list -->
+  <section id="tab-list" class="tab-panel" hidden>
+    <h2 data-i18n="listTitle">All circulars</h2>
+    <div class="filters">
+      <input id="search" type="search" data-i18n-ph="searchPh" placeholder="Search organisation or post&#8230;" aria-label="Search">
+      <select id="filter-sector" aria-label="Sector filter"></select>
+      <select id="filter-status" aria-label="Status filter"></select>
+      <label class="check-inline"><input id="filter-closing" type="checkbox"> <span data-i18n="filterClosingSoon">Closing soon only</span></label>
+      <select id="sort-select" aria-label="Sort">
+        <option value="deadline" data-i18n="sortDeadline">By deadline</option>
+        <option value="newest" data-i18n="sortNewest">Newest first</option>
+        <option value="fee" data-i18n="sortFee">By fee</option>
+      </select>
+    </div>
+    <p id="list-empty" class="empty" data-i18n="listEmpty" hidden>No circulars found. Change the filters or add a new circular.</p>
+    <div id="circ-list" class="card-list"></div>
+  </section>
+
+  <!-- Add / edit form -->
+  <section id="tab-add" class="tab-panel" hidden>
+    <h2 id="form-title" data-i18n="formTitleAdd">Add a new circular</h2>
+    <form id="circ-form" novalidate>
+      <div class="field">
+        <label for="f-org" data-i18n="fOrg">Organisation name</label>
+        <input id="f-org" type="text" maxlength="80" autocomplete="off">
+        <span class="err" id="err-org"></span>
+      </div>
+      <div class="field">
+        <label for="f-post" data-i18n="fPost">Post name</label>
+        <input id="f-post" type="text" maxlength="100" autocomplete="off">
+        <span class="err" id="err-post"></span>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="f-sector" data-i18n="fSector">Sector</label>
+          <select id="f-sector"></select>
+          <span class="err" id="err-sector"></span>
+        </div>
+        <div class="field">
+          <label for="f-grade" data-i18n="fGrade">Grade</label>
+          <select id="f-grade"></select>
+          <span class="err" id="err-grade"></span>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="f-vacancies" data-i18n="fVacancies">Number of vacancies</label>
+          <input id="f-vacancies" type="number" min="1" max="99999" inputmode="numeric">
+          <span class="err" id="err-vacancies"></span>
+        </div>
+        <div class="field">
+          <label for="f-deadline" data-i18n="fDeadline">Application deadline</label>
+          <input id="f-deadline" type="date">
+          <span class="err" id="err-deadline"></span>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="f-fee" data-i18n="fFee">Application fee (&#2547;)</label>
+          <input id="f-fee" type="number" min="0" max="5000" inputmode="numeric" value="0">
+          <span class="err" id="err-fee"></span>
+        </div>
+        <div class="field check-field">
+          <label class="check-inline"><input id="f-feepaid" type="checkbox"> <span data-i18n="fFeePaid">Fee paid</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label for="f-source" data-i18n="fSource">Circular link (optional)</label>
+        <input id="f-source" type="url" placeholder="https://&#8230;" autocomplete="off">
+        <span class="err" id="err-source"></span>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="f-examdate" data-i18n="fExamDate">Exam date (optional)</label>
+          <input id="f-examdate" type="date">
+          <span class="err" id="err-examdate"></span>
+        </div>
+        <div class="field">
+          <label for="f-venue" data-i18n="fVenue">Exam centre (optional)</label>
+          <input id="f-venue" type="text" maxlength="120" autocomplete="off">
+          <span class="err" id="err-venue"></span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="f-status" data-i18n="fStatus">Status</label>
+        <select id="f-status"></select>
+        <span class="err" id="err-status"></span>
+      </div>
+      <div class="field">
+        <label for="f-notes" data-i18n="fNotes">Notes (optional)</label>
+        <textarea id="f-notes" rows="3" maxlength="300"></textarea>
+        <span class="err" id="err-notes"></span>
+      </div>
+      <p id="form-msg" class="msg" role="status"></p>
+      <div class="form-actions">
+        <button class="btn primary" type="submit" data-i18n="saveBtn">Save</button>
+        <button class="btn" id="cancel-edit" type="button" data-i18n="cancelBtn" hidden>Cancel</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Data -->
+  <section id="tab-data" class="tab-panel" hidden>
+    <h2 data-i18n="dataTitle">Data management</h2>
+    <div class="data-box">
+      <button class="btn primary" id="export-btn" type="button" data-i18n="exportBtn">Download backup (JSON)</button>
+      <label class="btn" for="import-file" data-i18n="importBtn">Import backup</label>
+      <input id="import-file" type="file" accept="application/json,.json" hidden>
+      <button class="btn danger" id="erase-btn" type="button" data-i18n="eraseBtn">Erase all data</button>
+      <p id="data-msg" class="msg" role="status"></p>
+      <p class="hint" id="data-count"></p>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap footer">
+  <p data-i18n="footerNote">This app ships with no circular data &#8212; you enter everything yourself. Always verify deadlines and fees against the official circular.</p>
+</footer>
+
+<script src="js/i18n.js"></script>
+<script src="js/logic.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
